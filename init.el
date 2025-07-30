@@ -1,6 +1,19 @@
 ;; Don't show the splash screen
 (setq inhibit-startup-message t  ; Comment at end of line!
       visible-bell t) 
+;;UI
+
+(column-number-mode)
+(global-display-line-numbers-mode t)
+
+;; Disable line numbers for some modes
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+
 ;; Display line numbers in every buffer
 (global-display-line-numbers-mode 1)
 
@@ -15,18 +28,17 @@
 
 ;; Initialize package sources
 (require 'package)
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
-(unless package-archive-contents
- (package-refresh-contents))
+(package-refresh-contents)
 
-;; Initialize use-package on non-Linux platforms
+
+;; Downloads and install if missing
 (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
+  (package-install 'use-package)
+  (package-install 'evil))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -51,15 +63,36 @@
   :config
   (ivy-mode 1))
 
+
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
 
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
 
 
+;; Enable Evil
+(use-package evil
+             :ensure t
+             :init (evil-mode 1)
+             )
 
 
-
-
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
