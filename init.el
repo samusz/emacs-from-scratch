@@ -32,7 +32,8 @@
              '("melpa" . "https://melpa.org/packages/"))
 
 (package-initialize)
-(package-refresh-contents)
+(unless package-refresh-contents 
+  (package-refresh-contents))
 
 
 ;; Downloads and install if missing
